@@ -8,7 +8,7 @@ El envío de los datos se realiza cada vez que el pedido cambia a estado pagado 
 procesará según las reglas definidias en la pasarela de facturación en BillMySales.
 
 
-![Configuración del módulo en Dolibarr](https://i.imgur.com/nIK435t.png "Configuración del módulo en Dolibarr")
+![Configuración del módulo en Dolibarr](https://i.imgur.com/QPhjdWA.png "Configuración del módulo en Dolibarr")
 
 Instalar a partir de este código fuente
 ---------------------------------------

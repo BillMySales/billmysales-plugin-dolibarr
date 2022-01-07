@@ -4,9 +4,10 @@ Plugin BillMySales para Dolibarr
 Este módulo realiza el envío de los datos de una factura a [BillMySales](https://billmysales.com)
 para realizar el proceso de facturación del pedido.
 
-El envío de los datos se realiza cada vez que el pedido cambia a estado pagado y se
+El envío de los datos se realiza cada vez que el pedido cambia al estado pagado y se
 procesará según las reglas definidias en la pasarela de facturación en BillMySales.
 
+El módulo fue probado con Dolibarr 14.0.3
 
 ![Configuración del módulo en Dolibarr](https://i.imgur.com/QPhjdWA.png "Configuración del módulo en Dolibarr")
 

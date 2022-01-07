@@ -121,7 +121,7 @@ class InterfaceBillmysalesTriggers extends DolibarrTriggers
 	    $opciones = array(
             "http" => array(
                 "header" => array(
-                        "Content-type: plain/text",
+                        "Content-type: application/json",
                         "X-DolibarrBMS-Hmac-Sha256:".$signature,
                     ),
                 "method" => "POST",

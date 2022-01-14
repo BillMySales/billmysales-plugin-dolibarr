@@ -112,30 +112,32 @@ class InterfaceBillmysalesTriggers extends DolibarrTriggers
 	        //'billing_contact_id' => $facture->getIdBillingContact(),
 	        //'shipping_contact_id' => $facture->getIdShippingContact(),
 	    ]);
-	    $signature = $this->sign_data($data, $conf->global->BILLMYSALES_WEBHOOK_TOKEN);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        // asignar cabecera
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json", "X-DolibarrBMS-Hmac-Sha256:".$signature));
-        // realizar consulta a curl recuperando cabecera y cuerpo
-        curl_setopt($curl, CURLOPT_URL, $conf->global->BILLMYSALES_WEBHOOK_URL);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HEADER, 1);
-        $resultado = curl_exec($curl);
-        if (!$resultado) {
-            $curl_error = curl_error($curl);
-            return 1;
-        }
-        if ($conf->global->BILLMYSALES_WEBHOOK_LOG == "1") {
+        $response = $this->api_post($conf->global->BILLMYSALES_WEBHOOK_URL, $data, $conf->global->BILLMYSALES_WEBHOOK_TOKEN);
+		if ($conf->global->BILLMYSALES_WEBHOOK_LOG == "1") {
     	    dol_syslog(
-    		    "Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". facture_id: ".$facture->id." - error: ".$curl_error." - json_invoice: ".$data
+    		    "Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". facture_id: ".$facture->id." - json_response: ".$response
     		);
 	    }
-	    curl_close($curl);
         return 0;
 	}
+
+	private function api_post($url, $data, $token)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_URL => $url,
+            CURLOPT_HTTPHEADER => [
+				'Content-type: application/json',
+                'X-DolibarrBMS-Hmac-Sha256: ' . $this->sign_data($data, $token)
+            ],
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($response, true);
+    }
 
 	private function sign_data($data, $token)
 	{

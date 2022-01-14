@@ -112,27 +112,28 @@ class InterfaceBillmysalesTriggers extends DolibarrTriggers
 	        //'billing_contact_id' => $facture->getIdBillingContact(),
 	        //'shipping_contact_id' => $facture->getIdShippingContact(),
 	    ]);
-		if ($conf->global->BILLMYSALES_WEBHOOK_LOG == "1") {
-    	    dol_syslog(
-    				"Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$facture->id." json_invoice:".$data
-    		);
-	    }
 	    $signature = $this->sign_data($data, $conf->global->BILLMYSALES_WEBHOOK_TOKEN);
-	    $opciones = array(
-            "http" => array(
-                "header" => array(
-                        "Content-type: application/json",
-                        "X-DolibarrBMS-Hmac-Sha256:".$signature,
-                    ),
-                "method" => "POST",
-                "content" => $data,
-            ),
-        );
-        $contexto = stream_context_create($opciones);
-        $resultado = file_get_contents($conf->global->BILLMYSALES_WEBHOOK_URL, false, $contexto);
-        if ($resultado === false) {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        // asignar cabecera
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json", "X-DolibarrBMS-Hmac-Sha256:".$signature));
+        // realizar consulta a curl recuperando cabecera y cuerpo
+        curl_setopt($curl, CURLOPT_URL, $conf->global->BILLMYSALES_WEBHOOK_URL);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        $resultado = curl_exec($curl);
+        if (!$resultado) {
+            $curl_error = curl_error($curl);
             return 1;
         }
+        if ($conf->global->BILLMYSALES_WEBHOOK_LOG == "1") {
+    	    dol_syslog(
+    		    "Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". facture_id: ".$facture->id." - error: ".$curl_error." - json_invoice: ".$data
+    		);
+	    }
+	    curl_close($curl);
         return 0;
 	}
 

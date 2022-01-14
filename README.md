@@ -15,7 +15,7 @@ Instalar a partir de este código fuente
 ---------------------------------------
 
 1. Descargar el [código de este repositorio](https://github.com/BillMySales/billmysales-plugin-dolibarr/archive/refs/heads/main.zip).
-2. Descomprimir el archivo y renombrar la carpeta a `module_billmysales-1.0.0`.
+2. Descomprimir el archivo y renombrar la carpeta a `module_billmysales-1.0.0`
 3. Comprimir la carpeta renombrada.
 4. Subir el módulo a Dolibarr.
 

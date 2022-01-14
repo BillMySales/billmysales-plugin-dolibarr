@@ -112,11 +112,12 @@ class InterfaceBillmysalesTriggers extends DolibarrTriggers
 	        //'billing_contact_id' => $facture->getIdBillingContact(),
 	        //'shipping_contact_id' => $facture->getIdShippingContact(),
 	    ]);
+		if ($conf->global->BILLMYSALES_WEBHOOK_LOG == '1') {
+    	    dol_syslog('BillMySales Data BillPayed #'.$facture->id.': '.$data);
+	    }
         $response = $this->api_post($conf->global->BILLMYSALES_WEBHOOK_URL, $data, $conf->global->BILLMYSALES_WEBHOOK_TOKEN);
-		if ($conf->global->BILLMYSALES_WEBHOOK_LOG == "1") {
-    	    dol_syslog(
-    		    "Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". facture_id: ".$facture->id." - json_response: ".json_encode($response)
-    		);
+		if ($conf->global->BILLMYSALES_WEBHOOK_LOG == '1') {
+    	    dol_syslog('BillMySales Response BillPayed #'.$facture->id.': '.json_encode($response));
 	    }
         return $response;
 	}

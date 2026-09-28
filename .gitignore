@@ -1,2 +1,6 @@
-*.xml
-.DS_Store
+/vendor/
+/node_modules/
+/dist/
+/var/
+/.phpunit.cache/
+/.phpunit.result.cache

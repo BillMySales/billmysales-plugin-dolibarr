@@ -1,0 +1,59 @@
+{
+    "name": "billmysales/billmysales-plugin-dolibarr",
+    "description": "BillMySales for Dolibarr: sends invoices to BillMySales.",
+    "type": "dolibarr-module",
+    "homepage": "https://www.billmysales.com",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "BillMySales",
+            "homepage": "https://www.billmysales.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/BillMySales/billmysales-plugin-dolibarr/issues",
+        "source": "https://github.com/BillMySales/billmysales-plugin-dolibarr"
+    },
+    "autoload": {
+        "psr-4": {
+            "BillMySales\\Dolibarr\\": "plugin/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BillMySales\\TestsDolibarr\\": "tests/src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "caprel/dolibarr-stubs-all": "dev-master",
+        "ext-xdebug": "*",
+        "justinrainbow/json-schema": "^6.4",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.9",
+        "friendsofphp/php-cs-fixer": "^3.95"
+    },
+    "scripts": {
+        "tests": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration=phpunit.xml",
+        "phpcs-fix": "vendor/bin/php-cs-fixer fix -v --config=php-cs-fixer.php",
+        "phpcs": "vendor/bin/php-cs-fixer fix -v --dry-run --diff --config=php-cs-fixer.php",
+        "phpcs-rules": "vendor/bin/phpcs --standard=phpcs.xml",
+        "phpstan": "vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=1G",
+        "phpstan-export": "vendor/bin/phpstan analyse --configuration=phpstan.neon --level 9 --generate-baseline"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.33"
+        },
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

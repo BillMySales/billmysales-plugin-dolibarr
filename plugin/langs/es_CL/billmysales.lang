@@ -1,0 +1,41 @@
+# Copyright (c) 2026 BillMySales <https://www.billmysales.com>
+# Licensed under the GNU Affero General Public License v3.0 or later.
+# See LICENSE file for more details.
+
+#
+# Module
+#
+ModuleBillmysalesName = BillMySales
+ModuleBillmysalesDesc = Envía las facturas a BillMySales cuando llegan a un evento seleccionado.
+
+#
+# Settings page
+#
+BillMySalesSetup = BillMySales
+BillMySalesSetupPage = Las facturas se envían a BillMySales cuando llegan a uno de los eventos seleccionados, firmadas con el secreto compartido.
+BillMySalesActive = Activo
+BillMySalesActiveTooltip = Si está desactivado, no se envía ninguna factura; se mantiene la configuración.
+BillMySalesWebhook = URL de notificación
+BillMySalesWebhookTooltip = URL que te entregó BillMySales para esta integración.
+BillMySalesToken = Secreto
+BillMySalesTokenTooltip = El secreto compartido con BillMySales, usado para firmar cada notificación.
+BillMySalesEventBILL_VALIDATE = Factura validada
+BillMySalesEventBILL_PAYED = Factura pagada
+
+#
+# About page
+#
+BillMySalesAbout = Acerca de
+
+#
+# Invoice page
+#
+BillMySalesStatus = BillMySales
+BillMySalesStatusNone = Aún no enviada
+BillMySalesStatusSent = Enviada
+BillMySalesStatusRetrying = No enviada, reintentando
+BillMySalesStatusGivenUp = No enviada, sin más reintentos
+BillMySalesStatusRejected = Rechazada
+BillMySalesStatusGone = La factura se eliminó antes de poder enviarse
+BillMySalesSendAgain = Enviar a BillMySales
+BillMySalesResendRequested = BillMySales: envío solicitado.

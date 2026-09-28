@@ -1,0 +1,41 @@
+# Copyright (c) 2026 BillMySales <https://www.billmysales.com>
+# Licensed under the GNU Affero General Public License v3.0 or later.
+# See LICENSE file for more details.
+
+#
+# Module
+#
+ModuleBillmysalesName = BillMySales
+ModuleBillmysalesDesc = Sends invoices to BillMySales when they reach a selected event.
+
+#
+# Settings page
+#
+BillMySalesSetup = BillMySales
+BillMySalesSetupPage = Invoices are sent to BillMySales when they reach one of the selected events, signed with the shared secret.
+BillMySalesActive = Active
+BillMySalesActiveTooltip = When off, no invoices are sent; the settings are kept.
+BillMySalesWebhook = Notification URL
+BillMySalesWebhookTooltip = URL BillMySales gave you for this integration.
+BillMySalesToken = Secret
+BillMySalesTokenTooltip = The secret shared with BillMySales, used to sign each notification.
+BillMySalesEventBILL_VALIDATE = Invoice validated
+BillMySalesEventBILL_PAYED = Invoice paid
+
+#
+# About page
+#
+BillMySalesAbout = About
+
+#
+# Invoice page
+#
+BillMySalesStatus = BillMySales
+BillMySalesStatusNone = Not sent yet
+BillMySalesStatusSent = Sent
+BillMySalesStatusRetrying = Not sent, retrying
+BillMySalesStatusGivenUp = Not sent, no more retries
+BillMySalesStatusRejected = Rejected
+BillMySalesStatusGone = Invoice deleted before it could be sent
+BillMySalesSendAgain = Send to BillMySales
+BillMySalesResendRequested = BillMySales: sending requested.

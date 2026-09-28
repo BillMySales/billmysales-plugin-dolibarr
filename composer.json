@@ -32,7 +32,7 @@
         "ext-xdebug": "*",
         "justinrainbow/json-schema": "^6.4",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^9.6",
         "squizlabs/php_codesniffer": "^3.9",
         "friendsofphp/php-cs-fixer": "^3.95"

@@ -19,6 +19,11 @@ parameters:
     # targets 24): the closest version available.
     scanDirectories:
         - vendor/caprel/dolibarr-stubs-all/dolibarr-23
+    # The constants the plugin uses directly, declared on their own
+    # (phpstan-stubs.php): relying only on the scan above proved unreliable
+    # in CI for these.
+    scanFiles:
+        - phpstan-stubs.php
     # Composer's autoloader.
     bootstrapFiles:
         - tests/bootstrap.php

@@ -26,7 +26,8 @@ declare(strict_types=1);
 if (!defined('NOSESSION')) {
     define('NOSESSION', '1');
 }
-require '/var/www/dolibarr/htdocs/master.inc.php';
+// The file only exists inside the stack's container.
+require '/var/www/dolibarr/htdocs/master.inc.php'; // @phpstan-ignore require.fileNotFound
 require_once DOL_DOCUMENT_ROOT . '/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/functions.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';

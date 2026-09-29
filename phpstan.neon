@@ -5,13 +5,6 @@ parameters:
     paths:
         - plugin
         - tests
-    # plugin/admin's two pages load the Dolibarr environment through a
-    # dynamic `@include` of main.inc.php (Dolibarr's own bootstrap idiom,
-    # unavoidable for a standalone admin page): PHPStan can't see the
-    # globals ($langs, $user, $db...) that file defines, so it flags every
-    # use of them as possibly undefined. Reviewed by hand instead.
-    excludePaths:
-        - plugin/admin
     # The lowest PHP the plugin supports (also when run on a newer one).
     phpVersion: 70400
     # No official Dolibarr stubs package exists; this community one is the

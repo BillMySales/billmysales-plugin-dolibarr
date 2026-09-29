@@ -2,6 +2,17 @@
 
 All notable changes to this module. Versions follow [Semantic Versioning](https://semver.org).
 
+## [2.0.1] - 2026-09-29
+
+- Dolibarr 19 is supported and tested: the settings form reads the secret
+  with the `none` check type, which every Dolibarr version knows (19 has no
+  `password` type: it logged an error on each save).
+- The scheduled job runs while the module is enabled, checked with
+  `isModEnabled()` instead of Dolibarr's `$conf->billmysales->enabled`,
+  which Dolibarr plans to remove.
+- Tested end to end: Dolibarr 19.0.4 with PHP 7.4 and 8.2, 20.0.4 with 8.2,
+  21.0.4 with 8.3, 22.0.5 with 8.4, 23.0.4 with 8.4 and 24.0.1 with 8.5.
+
 ## [2.0.0] - 2026-09-28
 
 Rewritten:

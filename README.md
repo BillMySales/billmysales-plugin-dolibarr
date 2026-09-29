@@ -16,10 +16,11 @@ issues the billing document).
 - Each notification is signed with HMAC-SHA256 with the secret shared with
   BillMySales.
 - The invoice detail page shows the last known delivery status, and a
-  "Enviar a BillMySales" button to send it again.
+  "Send to BillMySales" button to send it again.
 
-Requirements: Dolibarr 19.0+ (tested up to 24.0.1), PHP 7.4+ (tested up to
-8.5).
+Requirements: Dolibarr 19 to 24, PHP 7.4 or later. Tested (end to end,
+every release): Dolibarr 19.0.4 with PHP 7.4 and 8.2, 20.0.4 with 8.2,
+21.0.4 with 8.3, 22.0.5 with 8.4, 23.0.4 with 8.4 and 24.0.1 with 8.5.
 
 Installation
 ------------
@@ -67,7 +68,7 @@ Headers:
 | `X-BillMySales-Platform-Version` | Dolibarr version |
 | `X-BillMySales-Plugin-Version` | module version |
 | `X-BillMySales-Source` | instance URL |
-| `X-BillMySales-Event` | `invoice.validated`, `invoice.paid` or `invoice.resent` ("Enviar a BillMySales") |
+| `X-BillMySales-Event` | `invoice.validated`, `invoice.paid` or `invoice.resent` ("Send to BillMySales") |
 | `X-BillMySales-Delivery` | UUID of the notification (the same on retries) |
 | `User-Agent` | `BillMySales-dolibarr/<version>` |
 | `X-DolibarrBMS-Hmac-Sha256` | the same signature, as the module's 1.x version sent it |
@@ -124,6 +125,18 @@ it (`make check`).
 make e2e            # E2E_KEEP=1 keeps the stack running (then make e2e-clean)
 ```
 
+By default it runs on the stack's default versions. `E2E_STACK_ENV` (extra
+`NAME=value` lines, one per line, appended to the stack's `.env`) selects
+another combination, e.g. the floor:
+
+```shell
+E2E_STACK_ENV=$'DOLI_VERSION=19.0.4\nDOLI_SHA256=\nPHP_VERSION=7.4' make e2e
+```
+
+`.github/workflows/e2e.yml` runs every combination the module supports (see
+Requirements). `E2E_RECEIVER_PORT` changes the receiver's port (default
+8099) when another run holds it.
+
 `tests/e2e/run.sh` clones the
 [Dolibarr Docker stack](https://github.com/BillMySales/billmysales-docker-dolibarr)
 into `var/e2e/stack` (`STACK_REPO`, `STACK_REF`, default `master`), starts it
@@ -172,11 +185,15 @@ each choice stays with the code:
   explicitly documented (by the Free Software Foundation, in both the GPLv3
   and AGPLv3 texts themselves) as convertible with GPLv3, making it the
   strongest copyleft option that satisfies the requirement.
-- **Minimum version**: Dolibarr 19.0, its long-term support line, tested up
-  to 24.0.1 (the version this project's own Dolibarr stack runs). PHP
-  7.4+ (tested up to 8.5): Dolibarr 19 officially supports down to PHP 7.4,
-  chosen so one toolchain (PHP CS Fixer, PHPStan, PHPUnit) runs unmodified
-  from the floor to the latest PHP tested.
+- **Minimum version**: Dolibarr 19.0. Dolibarr publishes no usage data per
+  version (only download counts), so the floor isn't weighed against
+  installed versions. The versions the module supports are the ones its
+  end-to-end tests run on, which are the combinations the Dolibarr Docker
+  stack validates: every major version from 19 to 24, each on its highest
+  PHP (Dolibarr documents 7.1 to 8.2 for 19 and 20, up to 8.3 for 21, 8.4
+  for 22 and 23, 8.5 for 24), and 19 also on PHP 7.4, the lowest PHP this
+  project's plugins are built and tested with (one toolchain, PHP CS Fixer,
+  PHPStan and PHPUnit, runs unmodified from 7.4 to the latest PHP tested).
 - **No official PHPStan stubs package**: no official stub package for
   Dolibarr core classes exists; `caprel/dolibarr-stubs-all` (community) is
   used instead, installed as `dev-master` (it has no tagged release). It
@@ -199,7 +216,10 @@ each choice stays with the code:
   per invoice that has ever had a delivery attempt (replaced on each new
   attempt, bounded by the shop's invoice count, not by attempts), shown on
   the invoice detail page; the technical log (every attempt, with its
-  detail) goes to Dolibarr's own syslog.
+  detail) goes to Dolibarr's own syslog. That log can be off or rotated
+  (Syslog module settings: where it writes and at what level), which loses
+  the detail of past attempts: enable it during the first tests of a new
+  installation and turn it off only once the integration works.
 - **Payload format**: kept the exact `{facture, societe}` shape (Dolibarr's
   own `Facture` and `Societe` objects, as plain data) the module's first
   version already sent, since changing it without being able to check it
@@ -220,19 +240,19 @@ each choice stays with the code:
   settings form's secret field is a plain HTML password input; a small
   script (`plugin/assets/js/admin.js`) adds the show/hide button (no bundler:
   loaded as is by the back office, checked by ESLint). Saving it reads the
-  field with Dolibarr's `password` GETPOST type, not `alpha`: `alpha`
+  field with Dolibarr's `none` GETPOST type (for values like passwords), not
+  `alpha`: `alpha`
   rewrites `\x` sequences to `/x` and drops quotes, which would corrupt an
   arbitrary secret.
 - **No dedicated permission**: the module declares no permission of its own
   (`$this->rights` is empty). The invoice detail page's BillMySales block
-  and its "Enviar a BillMySales" button follow the invoice's own read/write
+  and its "Send to BillMySales" button follow the invoice's own read/write
   permission; there is nothing else in the module an ordinary user would
   need a separate permission for.
 - **Settings keys changed**: no migration from the module's first version
   is offered (no real customer install of this rewrite exists yet); a
   reinstall reconfigures the settings.
-- **End-to-end fixtures without a CLI**: Dolibarr has no official
-  WP-CLI-alike CLI. `tests/e2e/fixtures.php`, copied into the stack's
+- **End-to-end fixtures**: `tests/e2e/fixtures.php`, copied into the stack's
   `dolibarr` container and run with plain `php` (Dolibarr's own
   `master.inc.php` bootstrap, the same one its `scripts/` directory uses),
   covers the setup Dolibarr itself has no dedicated CLI for (a thirdparty

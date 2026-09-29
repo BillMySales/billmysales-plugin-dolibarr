@@ -34,7 +34,6 @@ class modBillmysales extends DolibarrModules
      */
     public function __construct($db)
     {
-        global $conf;
         $this->db = $db;
 
         $this->numero = 483001;
@@ -48,7 +47,7 @@ class modBillmysales extends DolibarrModules
         $this->editor_name = 'BillMySales';
         $this->editor_url = 'https://www.billmysales.com';
 
-        $this->version = '2.0.0';
+        $this->version = '2.0.1';
         $this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
         $this->picto = 'billmysales@billmysales';
 
@@ -78,11 +77,6 @@ class modBillmysales extends DolibarrModules
 
         $this->const = [];
 
-        if (!isset($conf->billmysales) || !isset($conf->billmysales->enabled)) {
-            $conf->billmysales = new stdClass();
-            $conf->billmysales->enabled = 0;
-        }
-
         $this->tabs = [];
         $this->dictionaries = [];
         $this->boxes = [];
@@ -99,7 +93,7 @@ class modBillmysales extends DolibarrModules
                 'frequency' => 5,
                 'unitfrequency' => 60,
                 'status' => 1,
-                'test' => '$conf->billmysales->enabled',
+                'test' => 'isModEnabled("billmysales")',
                 'priority' => 50,
             ],
         ];

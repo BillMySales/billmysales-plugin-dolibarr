@@ -89,11 +89,12 @@ function billmysalesSaveSettings()
     $input = [
         Settings::KEY_ACTIVE => GETPOST(Settings::KEY_ACTIVE, 'alpha'),
         Settings::KEY_URL => GETPOST(Settings::KEY_URL, 'alpha'),
-        // 'password': the secret must survive as typed (it signs every
+        // 'none': the secret must survive as typed (it signs every
         // delivery byte for byte), and 'alpha' rewrites "\x" to "/x" and
         // drops quotes; it is never echoed unescaped (dol_escape_htmltag(),
-        // masked with asterisks) so this is safe.
-        Settings::KEY_SECRET => GETPOST(Settings::KEY_SECRET, 'password'),
+        // masked with asterisks) so this is safe. ('password' is the same
+        // check in later Dolibarr versions, but 19 doesn't know that type.)
+        Settings::KEY_SECRET => GETPOST(Settings::KEY_SECRET, 'none'),
     ];
     foreach (Settings::EVENTS as $action) {
         $input[Settings::KEY_EVENTS . '_' . $action] = GETPOST(Settings::KEY_EVENTS . '_' . $action, 'alpha');

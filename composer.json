@@ -30,12 +30,12 @@
     "require-dev": {
         "caprel/dolibarr-stubs-all": "dev-master",
         "ext-xdebug": "*",
+        "friendsofphp/php-cs-fixer": "^3.95",
         "justinrainbow/json-schema": "^6.4",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.6",
-        "squizlabs/php_codesniffer": "^3.9",
-        "friendsofphp/php-cs-fixer": "^3.95"
+        "squizlabs/php_codesniffer": "^3.9"
     },
     "scripts": {
         "tests": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration=phpunit.xml",

@@ -13,7 +13,7 @@ declare(strict_types=1);
  * well, small and self-contained.
  */
 
-define('DOL_DOCUMENT_ROOT', '');
+define('DOL_DOCUMENT_ROOT', __DIR__ . '/vendor/caprel/dolibarr-stubs-all/dolibarr-23');
 define('DOL_URL_ROOT', '');
 define('DOL_MAIN_URL_ROOT', '');
 define('DOL_VERSION', '');

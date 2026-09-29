@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 // Load the Dolibarr environment.
 $res = 0;
-if (!$res && !empty($_SERVER['CONTEXT_DOCUMENT_ROOT'])) {
+if (!empty($_SERVER['CONTEXT_DOCUMENT_ROOT'])) {
     $res = @include $_SERVER['CONTEXT_DOCUMENT_ROOT'] . '/main.inc.php';
 }
 $tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME'];
@@ -44,6 +44,15 @@ if (!$res && file_exists('../../../main.inc.php')) {
 if (!$res) {
     die('Include of main fails');
 }
+
+/**
+ * Dolibarr's environment, defined by main.inc.php.
+ *
+ * @var DoliDB    $db
+ * @var Translate $langs
+ * @var User      $user
+ */
+global $db, $langs, $user;
 
 require_once DOL_DOCUMENT_ROOT . '/core/lib/admin.lib.php';
 require_once __DIR__ . '/../lib/billmysales.lib.php';

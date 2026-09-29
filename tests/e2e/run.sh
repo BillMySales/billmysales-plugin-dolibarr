@@ -17,11 +17,10 @@
 # look at or to replay against BillMySales; stack.log. E2E_KEEP=1 also keeps
 # the stack running (then make e2e-clean).
 #
-# Dolibarr has no official CLI for thirdparty/invoice fixtures (unlike some
-# platforms' WP-CLI-alike tools): tests/e2e/fixtures.php, copied into the
-# "dolibarr" container, bootstraps Dolibarr itself for the setup steps that
-# need it (a thirdparty and a draft invoice, granting the development admin
-# every permission, enabling a Dolibarr module). Everything a real user
+# tests/e2e/fixtures.php, copied into the "dolibarr" container, bootstraps
+# Dolibarr itself for the setup steps that need it (a thirdparty and a draft
+# invoice, granting the development admin every permission, enabling a
+# Dolibarr module). Everything a real user
 # would do (validating or paying an invoice, saving the settings, resending
 # a delivery, installing the zip) goes through plain HTTP with curl, cookies
 # and the page's own CSRF tokens, exactly as a browser would submit them.
@@ -33,7 +32,10 @@
 # receiver's (8099) must be free: stop the Dolibarr development stack.
 #
 # Environment: TOOLS_IMAGE (set by the Makefile), STACK_REPO, STACK_REF
-# (default master), E2E_KEEP.
+# (default master), E2E_KEEP, E2E_STACK_ENV (extra "NAME=value" lines, one per
+# line, appended to the stack's .env: e.g. DOLI_VERSION, DOLI_SHA256 and
+# PHP_VERSION to test another Dolibarr version), E2E_RECEIVER_PORT (default
+# 8099, for when another end-to-end run holds it).
 
 set -euo pipefail
 
@@ -46,7 +48,7 @@ STACK_REPO="${STACK_REPO:-https://github.com/BillMySales/billmysales-docker-${PL
 STACK_REF="${STACK_REF:-master}"
 TOOLS_IMAGE="${TOOLS_IMAGE:?Run it with make e2e}"
 RECEIVER="${PROJECT}-receiver"
-RECEIVER_PORT=8099
+RECEIVER_PORT="${E2E_RECEIVER_PORT:-8099}"
 RECEIVER_URL="http://host.docker.internal:${RECEIVER_PORT}/"
 SECRET="e2e-secret"
 # A secret with characters that must survive the settings form and JSON.
@@ -85,7 +87,7 @@ cron() {
 received() { find "${E2E}/webhooks" -name '*.json' | wc -l | tr -d ' '; }
 respond() { echo "$1" > "${E2E}/respond"; }
 port_in_use() { (exec 3<> "/dev/tcp/127.0.0.1/$1") 2> /dev/null; }
-env_value() { sed -n "s/^$1=//p" "${STACK}/.env.dev.example" | head -1; }
+env_value() { { printf '%s\n' "${E2E_STACK_ENV:-}"; cat "${STACK}/.env.dev.example"; } | sed -n "s/^$1=//p" | head -1; }
 
 # Starts a test case: what the receiver got before it isn't checked.
 case_start() { printf '\n[%s] %s\n' "$1" "$2"; printf '%02d' "$1" > "${E2E}/case"; FROM="$(received)"; }
@@ -200,6 +202,9 @@ up_and_wait() {
 stack_env() { # mount|zip
     {
         cat "${STACK}/.env.dev.example"
+        if [ -n "${E2E_STACK_ENV:-}" ]; then
+            printf '%s\n' "${E2E_STACK_ENV}"
+        fi
         echo "COMPOSE_PROJECT_NAME=${PROJECT}"
         if [ "$1" = mount ]; then
             echo "COMPOSE_FILE=compose.yaml:overrides/module.yaml"
@@ -311,7 +316,7 @@ respond 200
 cron
 check "$(invoice_expectations "${INV6}" 1 0)"
 
-case_start 7 "Sent again from the invoice page (\"Enviar a BillMySales\")"
+case_start 7 "Sent again from the invoice page (\"Send to BillMySales\")"
 resend_invoice "${INV6}"
 cron
 EVENT=invoice.resent check "$(EVENT=invoice.resent invoice_expectations "${INV6}" 1 0)"
